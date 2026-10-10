@@ -5,7 +5,8 @@
 <!-- Required for any UI change: before / after, English AND Roman Urdu, and a narrow (~800px) window. -->
 
 ## Checklist (docs/DEVELOPER_GUIDE.md → "Definition of done")
-- [ ] `npm run check` passes (typecheck + project rules + i18n)
+- [ ] `npm run check` passes (typecheck + project rules + i18n + tests)
+- [ ] New logic in `src/lib/` / new store actions have tests
 - [ ] New strings added to **both** `en` and `ru` in `src/lib/i18n.ts`
 - [ ] Only Astryx components + tokens; no raw `<div>`, inline styles or hex colours
 - [ ] Business logic is in `src/lib/` (pure functions), not in components

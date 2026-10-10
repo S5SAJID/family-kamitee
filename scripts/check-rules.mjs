@@ -53,7 +53,8 @@ const RULES = [
     why: 'Persistence is owned by the Zustand store (src/lib/store.ts). Do not touch storage directly.',
     test: /\b(localStorage|sessionStorage|indexedDB)\b/,
     files: /\.tsx?$/,
-    allow: ['src/lib/store.ts'],
+    // Test setup provides an in-memory localStorage for Node.
+    allow: ['src/lib/store.ts', 'src/test/setup.ts'],
   },
   {
     id: 'tauri-only-in-platform',

@@ -173,6 +173,8 @@ src-tauri/target/release/bundle/msi/Kameti Khata_1.0.0_x64_en-US.msi
 | `npm run dev` | Run the UI in a normal browser at http://localhost:1420 (window controls are hidden; files download instead of a Save dialog; WhatsApp opens in a new tab) |
 | `npm run build` | Type-check and build the web assets into `dist/` |
 | `npm run typecheck` | TypeScript only |
+| `npm run check` | Typecheck + project rules + i18n + unit tests (what CI runs) |
+| `npm test` | Vitest unit tests (`src/lib/*.test.ts`) |
 | `npm run preview` | Serve the built `dist/` |
 | `npm run astryx -- <cmd>` | Astryx design-system CLI (component docs, templates, themes) |
 
@@ -377,6 +379,6 @@ The UI is built entirely with **[Astryx](https://astryx.atmeta.com)** components
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): layers, domain model, invariants, security, release pipeline
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): strict rules, UI and code patterns, recipes, definition of done
-- `npm run check` must pass (typecheck + project rules + i18n); CI runs it on every push and PR.
+- `npm run check` must pass (typecheck + project rules + i18n + unit tests); CI runs it on every push and PR.
 
 <!-- No licence chosen yet. Add a LICENSE file (e.g. MIT) if you want others to reuse this code. -->

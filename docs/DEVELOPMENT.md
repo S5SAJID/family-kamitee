@@ -8,7 +8,8 @@ Read [ARCHITECTURE.md](ARCHITECTURE.md) first. This file covers how to build fea
 npm install
 npm run dev            # browser, http://localhost:1420 (no native APIs; fallbacks are used)
 npm run desktop:dev    # Tauri window (needs Rust + MSVC build tools)
-npm run check          # typecheck + project rules + i18n; must pass before every commit
+npm run check          # typecheck + project rules + i18n + tests; must pass before every commit
+npm run test:watch     # Vitest in watch mode
 npx astryx <cmd>       # Astryx CLI, needs Node ≥ 22.13
 ```
 
@@ -32,19 +33,20 @@ Reset local data: **Settings → Reload Sample Data**, or DevTools → Applicati
 9. **Storage only in `store.ts`; Tauri APIs only in `platform.ts`.**
 10. Persisted shape changes need `version` + `migrate` (see ARCHITECTURE → Schema changes).
 11. Derived data is computed (`calc.ts`), never stored.
+12. New logic in `lib/` or a new store action ships with a test.
 
 ### UI (Astryx; also see `AGENTS.md`)
-12. **No raw `<div>`/`<span>`, no `style={{}}`, no hex colours, no `xstyle`; subpath imports (`@astryxdesign/core/Button`).**
-13. Discover before building: `astryx component <Name>`. Don't invent props.
-14. Every page uses `PageFrame` with one primary action and a `contentWidth` from `PAGE_WIDTH`.
-15. Records are `Table` / `List` rows. `Card` only for KPI tiles / standalone widgets. Status = `Token` / `StatusDot` (`Status.tsx`), never colour alone.
-16. Custom CSS only in `src/styles/app.css` inside `@layer app`, tokens only.
-17. Interactive targets are `size="lg"` for primary flows (senior-friendly); one control size per row.
+13. **No raw `<div>`/`<span>`, no `style={{}}`, no hex colours, no `xstyle`; subpath imports (`@astryxdesign/core/Button`).**
+14. Discover before building: `astryx component <Name>`. Don't invent props.
+15. Every page uses `PageFrame` with one primary action and a `contentWidth` from `PAGE_WIDTH`.
+16. Records are `Table` / `List` rows. `Card` only for KPI tiles / standalone widgets. Status = `Token` / `StatusDot` (`Status.tsx`), never colour alone.
+17. Custom CSS only in `src/styles/app.css` inside `@layer app`, tokens only.
+18. Interactive targets are `size="lg"` for primary flows (senior-friendly); one control size per row.
 
 ### Code
-18. **No `any`, no `@ts-ignore`, no `console.*`.**
-19. Named exports; `import type` for types; one component per file in `components/` / `views/`.
-20. Immutable updates; ids via `uid(prefix)`; timestamps as ISO strings.
+19. **No `any`, no `@ts-ignore`, no `console.*`.**
+20. Named exports; `import type` for types; one component per file in `components/` / `views/`.
+21. Immutable updates; ids via `uid(prefix)`; timestamps as ISO strings.
 
 ## UI patterns
 
@@ -126,6 +128,20 @@ Key prefix = area: `nav hdr dash kh dr hi se su pin cc st pm iv log wa rc`, plus
 Dynamic families (`t(\`pm.${mode}\`)`) need a key for every union member.
 Roman Urdu: everyday spoken words (Ada, Baqi, Qist, Parchi, Rakam, Haqdaar). Keep it short and polite (*karein*).
 
+## Tests
+
+Vitest, colocated as `*.test.ts` next to the code (`src/lib/`). Node environment, `TZ=Asia/Karachi`, and an
+in-memory `localStorage` from `src/test/setup.ts`.
+
+| Test | Covers |
+| --- | --- |
+| `calc.test.ts` | Intervals, month clamping, pot, round dates, stats, `getEntry` padding, round status, chi-square uniformity of `secureRandomInt` / `secureShuffle` |
+| `format.test.ts` | `Rs. 1,00,000` grouping, local date parsing, `waNumber` |
+| `store.test.ts` | Draw invariants, khata toggles + logs, cycle completion, member edit log, backup round-trip |
+
+Store tests reset with `loadSample()` in `beforeEach` and drive actions through `useStore.getState()`.
+Components are covered by manual QA (see Definition of done).
+
 ## Recipes
 
 **New page.** Add a `ViewId` in `types.ts` → `views/X.tsx` → `NAV` + the `page` map in `App.tsx` → `nav.x` keys.
@@ -152,7 +168,7 @@ permission in `capabilities/default.json` → wrapper with a browser fallback in
 
 ## Definition of done
 
-- `npm run check` and `npm run build` pass.
+- `npm run check` (incl. tests) and `npm run build` pass; new logic has tests.
 - Tested by hand in the browser and once in `desktop:dev` if native APIs are touched:
   sample data + fresh committee (upfront and round-by-round), English + Roman Urdu, 800px + wide window, large text.
 - Screenshots in the PR for UI changes.
@@ -160,8 +176,7 @@ permission in `capabilities/default.json` → wrapper with a browser fallback in
 
 ## Known gaps
 
-- No unit tests yet. First target: `calc.ts` (dates, pot, `secureShuffle` distribution) with Vitest.
-- `updateMember` doesn't write a log entry.
+- No component tests. UI is verified manually.
 - Data is not encrypted at rest; the PIN only gates the UI.
 - Astryx theme is injected at runtime: `astryx theme build` can't compile a theme extending the generated module yet.
 - Single JS chunk (~930 KB). Fine for a local app; code-split views if it grows.

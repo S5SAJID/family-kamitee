@@ -204,7 +204,15 @@ export const useStore = create<Store>()(
           members: [...s.members, m],
           log: [...s.log, log({type: 'member', detail: `+ ${m.name}`})],
         })),
-      updateMember: m => set(s => ({members: s.members.map(x => (x.id === m.id ? m : x))})),
+      updateMember: m =>
+        set(s => {
+          const prev = s.members.find(x => x.id === m.id);
+          if (!prev || (prev.name === m.name && prev.phone === m.phone)) return {};
+          return {
+            members: s.members.map(x => (x.id === m.id ? m : x)),
+            log: [...s.log, log({type: 'member', memberId: m.id, detail: `✎ ${prev.name} → ${m.name}`})],
+          };
+        }),
       removeMember: id =>
         set(s => {
           const m = s.members.find(x => x.id === id);

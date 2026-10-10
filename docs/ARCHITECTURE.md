@@ -93,7 +93,7 @@ stateDiagram-v2
 | Members can be added or removed only while `draws.length === 0` | `Khata`, `MemberDialog` |
 | Past winners keep paying | `eligibleMembers` affects draws only |
 | Handing over the last round sets `completedAt` + a `complete` log | `handover` |
-| Every payment, draw, handover and member add/remove appends a `LogEntry` | actions in `store.ts` |
+| Every payment, draw, handover and member add/edit/remove appends a `LogEntry` | actions in `store.ts` |
 | No partial amounts, fees or commission: an installment is paid or not | `PaidMark \| null` |
 
 ## State management
@@ -144,6 +144,6 @@ Plugins are dynamically imported, so `npm run dev` runs in any browser.
 - `vite.config.ts`: `base: './'` (Tauri custom protocol), port 1420. The Neutral theme's Google `fonts.css` is
   aliased to `src/styles/offline-fonts.css`; `theme.ts` uses the Segoe UI system stack.
 - Release profile: `lto = true`, `codegen-units = 1`, `strip` (small binaries, about 5 min to link in CI).
-- `.github/workflows/ci.yml`: typecheck, rules, i18n, web build on push/PR.
+- `.github/workflows/ci.yml`: typecheck, rules, i18n, unit tests, web build on push/PR.
 - `.github/workflows/release.yml`: tag `v*` → `tauri-action` → NSIS + MSI on a GitHub Release.
   The tag must equal `version` in `src-tauri/tauri.conf.json`.
