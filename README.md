@@ -22,6 +22,7 @@ Tauri 2 · React 19 · TypeScript · Vite · Astryx Design System (Neutral) · Z
 - [Screenshots](#screenshots)
 - [Install (Windows)](#install-windows)
 - [Build from source](#build-from-source)
+- [Releasing (automatic .exe builds)](#releasing-automatic-exe-builds)
 - [How to use](#how-to-use)
 - [How the money is calculated](#how-the-money-is-calculated)
 - [Fairness of the Qur'andazi](#fairness-of-the-quandazi)
@@ -118,9 +119,9 @@ Kameti Khata replaces the notebook (*khata*) and the paper slips with a transpar
 
 ## Install (Windows)
 
-1. Download the installer from the repository's **Releases** page (or [build it yourself](#build-from-source)):
-   - `Kameti Khata_1.0.0_x64-setup.exe`: recommended. Installs per user, no admin rights needed.
-   - `Kameti Khata_1.0.0_x64_en-US.msi`: for managed or IT installs.
+1. Download the latest installer from **[Releases](https://github.com/S5SAJID/family-kamitee/releases/latest)** (or [build it yourself](#build-from-source)):
+   - `Kameti.Khata_<version>_x64-setup.exe`: recommended. Installs per user, no admin rights needed.
+   - `Kameti.Khata_<version>_x64_en-US.msi`: for managed or IT installs.
 2. Run it and open **Kameti Khata** from the Start menu.
 3. The sample committee loads on first launch. When you're ready, go to **Settings & Backup → Start Fresh Committee**.
 
@@ -181,6 +182,37 @@ Edit `assets/app-icon.svg`, export it to a 1024×1024 PNG, then run:
 ```bash
 npx tauri icon assets/app-icon.png
 ```
+
+## Releasing (automatic .exe builds)
+
+Windows installers are built in the cloud by GitHub Actions using the official
+[`tauri-apps/tauri-action`](https://github.com/tauri-apps/tauri-action)
+([Tauri guide](https://v2.tauri.app/distribute/pipelines/github/)). The workflow is
+[`.github/workflows/release.yml`](.github/workflows/release.yml). You don't need Rust or Windows locally.
+
+**To publish a new version:**
+
+1. Bump the version in **`src-tauri/tauri.conf.json`**. This is the version the installer and release use.
+   Keep `package.json` and `src-tauri/Cargo.toml` in sync.
+2. Commit, tag and push:
+   ```bash
+   git commit -am "Release v1.0.1"
+   git tag v1.0.1
+   git push --follow-tags
+   ```
+3. After about 10–15 minutes (the first build is slower; later builds are cached), the release
+   **Kameti Khata v1.0.1** appears under [Releases](https://github.com/S5SAJID/family-kamitee/releases)
+   with the `.exe` and `.msi` attached.
+
+**What the workflow does:** it runs on `windows-latest`, checks that the tag matches the app version,
+installs Node and Rust (with caching), runs `npm ci` and the type-check, then runs `tauri build` and
+uploads the installers to the release.
+
+You can also start it by hand: **Actions → Release (Windows) → Run workflow**. This builds the version
+currently in `tauri.conf.json` and creates or updates the release `v<version>`.
+
+> To sign the installers later (removes the SmartScreen warning), add your certificate as repository
+> secrets and follow [Tauri's Windows code-signing guide](https://v2.tauri.app/distribute/sign/windows/).
 
 ## How to use
 
