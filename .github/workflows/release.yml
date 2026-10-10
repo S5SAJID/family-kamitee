@@ -1,0 +1,90 @@
+# Builds the Windows installers (.exe NSIS + .msi) with the official
+# tauri-apps/tauri-action and publishes them to a GitHub Release.
+# Docs: https://v2.tauri.app/distribute/pipelines/github/
+#
+# How to release:
+#   1. Bump "version" in src-tauri/tauri.conf.json (and package.json / Cargo.toml to match)
+#   2. git commit -am "Release v1.0.1" && git tag v1.0.1 && git push --follow-tags
+#   -> a few minutes later the release "Kameti Khata v1.0.1" appears with the installers.
+# You can also run it by hand: Actions tab -> "Release (Windows)" -> Run workflow.
+
+name: Release (Windows)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish-windows:
+    name: Build & publish Windows installers
+    runs-on: windows-latest
+    permissions:
+      contents: write # needed to create the release and upload assets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check tag matches app version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $appVersion = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $tagVersion = "${{ github.ref_name }}".TrimStart('v')
+          if ($appVersion -ne $tagVersion) {
+            Write-Error "Tag v$tagVersion does not match src-tauri/tauri.conf.json version $appVersion. Bump the version first."
+            exit 1
+          }
+          Write-Host "Releasing Kameti Khata v$appVersion"
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      # Runs `tauri build` (which runs `npm run build` via beforeBuildCommand),
+      # then creates/updates the release and uploads the installers.
+      - name: Build and publish release
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__ # replaced with the version from tauri.conf.json
+          releaseName: 'Kameti Khata v__VERSION__'
+          releaseBody: |
+            ## Kameti Khata v__VERSION__
+
+            100% offline Ballot Committee (BC / Kameti) manager for Windows.
+
+            ### Download
+            - **`Kameti.Khata_*_x64-setup.exe`**: recommended. Installs per user, no admin rights needed.
+            - **`Kameti.Khata_*_x64_en-US.msi`**: for managed or IT installs.
+
+            Windows 10 (1803+) / Windows 11, x64.
+            The installers are not code-signed, so SmartScreen may show "Windows protected your PC". Click **More info → Run anyway**.
+
+            Your data stays on your PC. Export a backup from **Settings & Backup** before upgrading.
+          releaseDraft: false
+          prerelease: false
+          args: ''
