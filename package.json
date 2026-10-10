@@ -1,0 +1,46 @@
+{
+  "name": "kameti-khata",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Kameti Khata - 100% offline Ballot Committee (BC / Kameti) manager for Windows, built with Tauri + React + Astryx.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/S5SAJID/family-kamitee.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p .",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build",
+    "astryx": "node node_modules/@astryxdesign/cli/clients/cli/bin/astryx.mjs"
+  },
+  "dependencies": {
+    "@astryxdesign/cli": "^0.4.3",
+    "@astryxdesign/core": "^0.6.7",
+    "@astryxdesign/theme-neutral": "^0.6.7",
+    "@stylexjs/stylex": "^0.19.1",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.8.1",
+    "@tauri-apps/plugin-fs": "^2.6.0",
+    "@tauri-apps/plugin-opener": "^2",
+    "lucide-react": "^1.55.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  }
+}

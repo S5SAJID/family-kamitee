@@ -1,0 +1,6 @@
+/*
+ * Offline font shim.
+ * The Neutral theme's fonts.css pulls Figtree from Google Fonts. This app must
+ * run 100% offline inside Tauri, so Vite aliases that import to this file and
+ * the theme (see src/theme.ts) uses the Windows system font stack instead.
+ */

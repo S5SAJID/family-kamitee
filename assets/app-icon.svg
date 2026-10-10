@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="#1b1b1b"/>
+  <!-- folded parchi rising from the slot -->
+  <g transform="rotate(-8 512 300)">
+    <rect x="392" y="196" width="240" height="132" rx="16" fill="#fae19e"/>
+    <path d="M392 262 H632" stroke="#4b3900" stroke-width="8" stroke-dasharray="14 12"/>
+  </g>
+  <!-- lid -->
+  <rect x="216" y="356" width="592" height="76" rx="24" fill="#ffffff"/>
+  <rect x="402" y="380" width="220" height="26" rx="13" fill="#1b1b1b"/>
+  <!-- box -->
+  <rect x="256" y="432" width="512" height="400" rx="32" fill="#f1f1f1"/>
+  <rect x="256" y="520" width="512" height="92" fill="#ffffff" stroke="#1b1b1b" stroke-opacity=".12" stroke-width="6"/>
+  <!-- check mark = paid / fair -->
+  <path d="M430 566 l52 40 l110 -96" fill="none" stroke="#00490b" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="312" y="680" width="96" height="52" rx="10" fill="#bce0bb" transform="rotate(-12 360 706)"/>
+  <rect x="452" y="700" width="96" height="52" rx="10" fill="#ffc4be" transform="rotate(8 500 726)"/>
+  <rect x="596" y="676" width="96" height="52" rx="10" fill="#c7dcff" transform="rotate(-6 644 702)"/>
+</svg>

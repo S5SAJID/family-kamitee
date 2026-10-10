@@ -1,0 +1,18 @@
+/*
+ * App-level overrides. Astryx components live in @layer astryx-base, so this
+ * layer (declared after) wins without !important. Only semantic tokens here.
+ */
+@layer app {
+  /* Installment toggle: paid = green palette, pending = yellow palette. */
+  .kk-inst[aria-pressed='true'] {
+    background-color: var(--color-background-green);
+    color: var(--color-text-green);
+  }
+  .kk-inst[aria-pressed='false'] {
+    background-color: var(--color-background-yellow);
+    color: var(--color-text-yellow);
+  }
+  .kk-inst:hover {
+    filter: brightness(0.96);
+  }
+}
