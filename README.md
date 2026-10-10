@@ -31,6 +31,7 @@ Tauri 2 · React 19 · TypeScript · Vite · Astryx Design System (Neutral) · Z
 - [Design system notes](#design-system-notes)
 - [Troubleshooting](#troubleshooting)
 - [Roadmap ideas](#roadmap-ideas)
+- [Contributing](#contributing)
 
 ---
 
@@ -371,5 +372,11 @@ The UI is built entirely with **[Astryx](https://astryx.atmeta.com)** components
 - Encrypted backups / encrypted local store
 - Automatic backup reminders
 - Signed installers with an auto-updater
+
+## Contributing
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): layers, domain model, invariants, security, release pipeline
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): strict rules, UI and code patterns, recipes, definition of done
+- `npm run check` must pass (typecheck + project rules + i18n); CI runs it on every push and PR.
 
 <!-- No licence chosen yet. Add a LICENSE file (e.g. MIT) if you want others to reuse this code. -->
